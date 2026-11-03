@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selo Falso — mapa animado</title>
+<style>
+  :root{
+    --mar-fundo:#15354f;
+    --mar-medio:#1f4f73;
+    --mar-raso:#35809e;
+    --espuma:#b8e0ec;
+    --areia:#cfa96b;
+    --mata:#4f7f4a;
+    --rocha:#6f6a5c;
+    --casco:#6b4428;
+    --vela:#e6dcc4;
+    --porto:#e8a33d;
+    --entreposto:#5fa95f;
+    --alfandega:#c7503f;
+    --tinta:#0d1e2a;
+    --linha:#2c4a60;
+    --texto:#cbd9e2;
+    --texto-fraco:#7d94a3;
+    --tint:rgba(0,0,0,0);
+    --glow:rgba(0,0,0,0);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--tinta);color:var(--texto);
+    font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:1000px;margin:0 auto;padding:20px 16px 48px}
+
+  .palco{position:relative;border:1px solid var(--linha);background:var(--mar-fundo);
+    overflow:hidden}
+  svg{display:block;width:100%;height:auto;image-rendering:pixelated}
+  .tint,.glow{position:absolute;inset:0;pointer-events:none;transition:background .9s ease,opacity .9s ease}
+  .tint{background:var(--tint);mix-blend-mode:multiply}
+  .glow{background:var(--glow);mix-blend-mode:screen}
+
+  /* ——— instrumentação ——— */
+  .consola{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;
+    border:1px solid var(--linha);border-top:0;padding:14px 16px;background:#102634}
+  .grupo{display:flex;flex-direction:column;gap:7px}
+  .rotulo{font-size:12px;letter-spacing:.02em;color:var(--texto-fraco)}
+  .janelas{display:flex;gap:6px}
+  .janelas button{font:inherit;font-size:13px;padding:5px 11px;cursor:pointer;
+    background:transparent;color:var(--texto);border:1px solid var(--linha)}
+  .janelas button[aria-pressed=true]{background:var(--texto);color:var(--tinta);border-color:var(--texto)}
+  .dados{display:flex;gap:8px}
+  .dado{width:40px;height:40px;background:var(--vela);border:1px solid #9c8e73;
+    cursor:pointer;padding:0;display:grid;place-items:center;position:relative}
+  .dado:disabled{opacity:.3;cursor:default}
+  .dado svg{width:28px;height:28px}
+  .estado{margin-left:auto;text-align:right;min-width:168px}
+  .estado b{display:block;font-size:19px;font-weight:600;color:#fff;letter-spacing:-.01em}
+  button:focus-visible,.dado:focus-visible{outline:2px solid var(--espuma);outline-offset:2px}
+
+  .legenda{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;font-size:13px;color:var(--texto-fraco)}
+  .legenda span{display:flex;align-items:center;gap:7px}
+  .chip{width:11px;height:11px;display:inline-block}
+
+  .nota{margin-top:26px;border-top:1px solid var(--linha);padding-top:18px;
+    font-size:14px;color:var(--texto-fraco);max-width:68ch}
+  .nota p{margin:0 0 10px}
+  .nota strong{color:var(--texto);font-weight:600}
+  .nota code{font-size:13px;background:#0a1721;padding:1px 5px;border:1px solid var(--linha)}
+
+  @media (prefers-reduced-motion: reduce){
+    .onda,.nuvem,.bandeira,.pulso{animation:none !important}
+  }
+  @media (max-width:560px){
+    .consola{gap:14px}
+    .estado{margin-left:0;text-align:left}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="palco">
+    <svg viewBox="0 0 960 486" role="img" aria-label="Mapa náutico animado do arquipélago, com rota, casas e embarcação">
+      <defs>
+        <linearGradient id="prof" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1b4162"/><stop offset="1" stop-color="#12304a"/>
+        </linearGradient>
+        <path id="rota" d="M 86 404 C 150 392 182 342 232 330 C 292 316 318 356 372 348
+                            C 440 338 452 268 516 250 C 580 232 614 268 676 250
+                            C 742 230 760 168 830 152"/>
+        <path id="atalho" d="M 372 348 C 436 362 470 318 516 250"/>
+      </defs>
+
+      <g shape-rendering="crispEdges">
+        <rect width="960" height="520" fill="url(#prof)"/>
+
+        <!-- faixas de profundidade -->
+        <path d="M0 300 C 160 282 300 318 430 300 C 580 278 740 312 960 288 L960 520 L0 520Z"
+              fill="var(--mar-medio)" opacity=".85"/>
+        <path d="M0 404 C 180 392 320 420 470 400 C 640 378 800 410 960 392 L960 520 L0 520Z"
+              fill="var(--mar-raso)" opacity=".55"/>
+
+        <!-- ondas -->
+        <g stroke="var(--espuma)" stroke-width="2" fill="none" opacity=".30">
+          <path class="onda o1" d="M-120 232 h22 M-60 232 h14 M-14 232 h24 M44 232 h12 M92 232 h22 M148 232 h14 M196 232 h22 M254 232 h13 M300 232 h22 M358 232 h14 M404 232 h22 M462 232 h13 M508 232 h22 M566 232 h14 M612 232 h22 M670 232 h13 M716 232 h22 M774 232 h14 M820 232 h22 M878 232 h13 M924 232 h22 M982 232 h14 M1028 232 h22"/>
+          <path class="onda o2" d="M-120 346 h26 M-54 346 h14 M-8 346 h26 M52 346 h13 M98 346 h26 M158 346 h14 M204 346 h26 M264 346 h13 M310 346 h26 M370 346 h14 M416 346 h26 M476 346 h13 M522 346 h26 M582 346 h14 M628 346 h26 M688 346 h13 M734 346 h26 M794 346 h14 M840 346 h26 M900 346 h13 M946 346 h26 M1006 346 h14"/>
+          <path class="onda o3" d="M-120 456 h20 M-66 456 h12 M-22 456 h20 M32 456 h11 M76 456 h20 M130 456 h12 M174 456 h20 M228 456 h11 M272 456 h20 M326 456 h12 M370 456 h20 M424 456 h11 M468 456 h20 M522 456 h12 M566 456 h20 M620 456 h11 M664 456 h20 M718 456 h12 M762 456 h20 M816 456 h11 M860 456 h20 M914 456 h12 M958 456 h20 M1012 456 h11"/>
+        </g>
+
+        <!-- ilhas -->
+        <g>
+          <polygon points="40,392 92,364 150,372 178,400 156,432 96,444 46,424" fill="var(--areia)"/>
+          <polygon points="64,392 104,374 142,380 160,398 134,414 88,418" fill="var(--mata)"/>
+          <polygon points="296,318 350,296 404,306 420,334 392,356 330,358 292,340" fill="var(--areia)"/>
+          <polygon points="316,320 356,306 390,312 400,330 374,342 332,340" fill="var(--mata)"/>
+          <polygon points="314,308 332,286 350,308" fill="var(--rocha)"/>
+          <polygon points="596,216 654,196 712,208 726,238 698,258 638,260 594,240" fill="var(--areia)"/>
+          <polygon points="618,220 660,206 696,214 706,232 678,244 636,242" fill="var(--mata)"/>
+          <polygon points="784,120 840,104 886,118 894,146 862,164 806,160 778,140" fill="var(--areia)"/>
+          <polygon points="804,124 846,114 874,124 880,140 852,152 816,148" fill="var(--mata)"/>
+        </g>
+
+        <!-- nuvens -->
+        <g fill="#dcebf2" opacity=".16">
+          <g class="nuvem n1"><rect x="120" y="68" width="92" height="14"/><rect x="142" y="56" width="52" height="12"/></g>
+          <g class="nuvem n2"><rect x="520" y="104" width="118" height="16"/><rect x="552" y="90" width="64" height="14"/></g>
+          <g class="nuvem n3"><rect x="330" y="150" width="72" height="12"/></g>
+        </g>
+      </g>
+
+      <!-- rota -->
+      <use href="#rota" fill="none" stroke="#0d2435" stroke-width="9" stroke-linecap="round" opacity=".55"/>
+      <use href="#rota" fill="none" stroke="var(--espuma)" stroke-width="2" stroke-dasharray="7 9"
+           stroke-linecap="round" opacity=".45"/>
+      <use href="#atalho" fill="none" stroke="var(--alfandega)" stroke-width="2" stroke-dasharray="4 8"
+           stroke-linecap="round" opacity=".5"/>
+      <text x="398" y="392" font-size="12" fill="var(--alfandega)" opacity=".85"
+            font-style="italic">mar aberto</text>
+
+      <!-- cartucho -->
+      <g opacity=".9">
+        <text x="120" y="196" font-size="29" fill="#9fc3d4" font-style="italic"
+              font-family="Georgia,'Times New Roman',serif" letter-spacing="2.5"
+              opacity=".72">Mar das Sete Bandeiras</text>
+        <line x1="122" y1="208" x2="470" y2="208" stroke="#9fc3d4" stroke-width="1" opacity=".3"/>
+      </g>
+
+      <g id="casas"></g>
+      <g id="navio"></g>
+    </svg>
+    <div class="tint" id="tint"></div>
+    <div class="glow" id="glow"></div>
+  </div>
+
+  <div class="consola">
+    <div class="grupo">
+      <span class="rotulo" id="lbl-janela">Janela do dia</span>
+      <div class="janelas" role="group" aria-labelledby="lbl-janela" id="janelas"></div>
+    </div>
+    <div class="grupo">
+      <span class="rotulo" id="lbl-dados">Dados do dia — escolha qual usar</span>
+      <div class="dados" role="group" aria-labelledby="lbl-dados" id="dados"></div>
+    </div>
+    <div class="estado" aria-live="polite">
+      <span class="rotulo">Atracado em</span>
+      <b id="casa-atual">Porto de Varre-Vento</b>
+    </div>
+  </div>
+
+  <div class="legenda">
+    <span><i class="chip" style="background:var(--porto)"></i> Porto — rotina</span>
+    <span><i class="chip" style="background:var(--entreposto)"></i> Entreposto — oportunidade</span>
+    <span><i class="chip" style="background:var(--alfandega)"></i> Alfândega — cobrança</span>
+  </div>
+
+  <div class="nota">
+    <p><strong>O que está animado aqui, e como.</strong> Tudo nesta página é SVG e
+    CSS, sem engine e sem WebGL. As ondas são <code>stroke-dashoffset</code> em
+    loop; as nuvens e o balanço do casco são <code>transform</code>; a bandeira é
+    um <code>steps()</code> sobre quatro quadros; o ciclo de luz das quatro janelas
+    são duas camadas de cor em <code>mix-blend-mode</code>; e a embarcação percorre
+    a rota com <code>getPointAtLength</code> sobre o próprio
+    <code>&lt;path&gt;</code> do mapa, inclinando conforme a tangente da curva.</p>
+    <p>O arquivo inteiro tem cerca de 14 KB e abre instantaneamente em 4G. O que
+    ficaria fora deste caminho é shader de água com distorção real e sistema de
+    partículas denso — para esses, o degrau seguinte é PixiJS, que continua em
+    TypeScript, antes de se pensar em trocar de engine.</p>
+    <p>Os três dados demonstram a outra decisão que se avalia melhor vendo do que
+    lendo: o dado é recurso, não destino. Role, escolha qual gastar, e repare que a
+    escolha muda em que casa você atraca.</p>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const SVG='http://www.w3.org/2000/svg';
+  const rota=document.getElementById('rota');
+  const gCasas=document.getElementById('casas');
+  const gNavio=document.getElementById('navio');
+  const elCasa=document.getElementById('casa-atual');
+  const total=rota.getTotalLength();
+
+  const TIPOS={
+    porto:{cor:'var(--porto)',nome:'Porto'},
+    entreposto:{cor:'var(--entreposto)',nome:'Entreposto'},
+    alfandega:{cor:'var(--alfandega)',nome:'Alfândega'}
+  };
+  const LUGARES=[
+    ['porto','Varre-Vento'],['entreposto','Angra Rasa'],['alfandega','Posto da Barra'],
+    ['entreposto','Feira de Sal'],['porto','Enseada Mansa'],['alfandega','Casa do Selo'],
+    ['entreposto','Cais do Norte'],['alfandega','Guarda-Mor'],['porto','Vila Âncora'],
+    ['entreposto','Mercado Velho'],['alfandega','Ponto Franco'],['porto','Sete Bandeiras']
+  ];
+
+  // posiciona as casas ao longo da rota
+  const casas=LUGARES.map((l,i)=>{
+    const p=rota.getPointAtLength(total*(i/(LUGARES.length-1)));
+    return {tipo:l[0],nome:l[1],x:p.x,y:p.y};
+  });
+
+  casas.forEach((c,i)=>{
+    const g=document.createElementNS(SVG,'g');
+    g.setAttribute('transform',`translate(${c.x} ${c.y})`);
+    g.setAttribute('shape-rendering','crispEdges');
+    g.dataset.i=i;
+
+    const halo=document.createElementNS(SVG,'circle');
+    halo.setAttribute('r','13'); halo.setAttribute('fill',TIPOS[c.tipo].cor);
+    halo.setAttribute('opacity','0'); halo.classList.add('halo');
+    g.appendChild(halo);
+
+    const base=document.createElementNS(SVG,'rect');
+    base.setAttribute('x','-7');base.setAttribute('y','-7');
+    base.setAttribute('width','14');base.setAttribute('height','14');
+    base.setAttribute('fill',TIPOS[c.tipo].cor);
+    base.setAttribute('stroke','#0d2435');base.setAttribute('stroke-width','2');
+    g.appendChild(base);
+
+    const marca=document.createElementNS(SVG,'rect');
+    marca.setAttribute('x','-2');marca.setAttribute('y','-2');
+    marca.setAttribute('width','4');marca.setAttribute('height','4');
+    marca.setAttribute('fill','#0d2435');
+    if(c.tipo==='entreposto') marca.setAttribute('opacity','0');
+    g.appendChild(marca);
+
+    gCasas.appendChild(g);
+  });
+
+  // embarcação
+  gNavio.innerHTML=`
+    <g id="casco" shape-rendering="crispEdges" transform="scale(1.3)">
+      <g class="balanco">
+        <polygon points="-11,3 11,3 8,10 -8,10" fill="var(--casco)"/>
+        <rect x="-11" y="1" width="22" height="2" fill="#8a5c36"/>
+        <rect x="-1" y="-20" width="2" height="21" fill="#4a2f1b"/>
+        <polygon points="1,-19 10,-6 1,-6" fill="var(--vela)"/>
+        <polygon points="-1,-19 -9,-7 -1,-7" fill="#d2c6ab"/>
+        <g class="bandeira"><rect x="1" y="-23" width="8" height="5" fill="var(--alfandega)"/></g>
+      </g>
+    </g>`;
+
+  let idx=0, animando=false;
+  function porCasa(i,tween){
+    const c=casas[i];
+    const prog=i/(casas.length-1);
+    const p=rota.getPointAtLength(total*prog);
+    const q=rota.getPointAtLength(Math.min(total,total*prog+1));
+    const ang=Math.atan2(q.y-p.y,q.x-p.x)*180/Math.PI;
+    gNavio.setAttribute('transform',`translate(${p.x} ${p.y-6}) rotate(${ang*0.35})`);
+    if(!tween){ elCasa.textContent=`${TIPOS[c.tipo].nome} de ${c.nome}`; }
+  }
+  function emL(l){
+    const p=rota.getPointAtLength(l);
+    const q=rota.getPointAtLength(Math.min(total,l+1));
+    const ang=Math.atan2(q.y-p.y,q.x-p.x)*180/Math.PI;
+    gNavio.setAttribute('transform',`translate(${p.x} ${p.y-6}) rotate(${ang*0.35})`);
+  }
+  porCasa(0);
+
+  function pulsar(i){
+    const g=gCasas.children[i];
+    const halo=g.querySelector('.halo');
+    halo.animate([{opacity:0,transform:'scale(.5)'},{opacity:.55,transform:'scale(1.9)'},
+                  {opacity:0,transform:'scale(2.4)'}],{duration:900,easing:'ease-out'});
+  }
+
+  const reduz=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function navegar(passos){
+    if(animando) return;
+    const destino=Math.min(casas.length-1, idx+passos);
+    if(destino===idx){ pulsar(idx); return; }
+    animando=true;
+    const l0=total*(idx/(casas.length-1));
+    const l1=total*(destino/(casas.length-1));
+    const dur=reduz?0:Math.max(500,Math.abs(destino-idx)*430);
+    const t0=performance.now();
+    (function passo(t){
+      const k=dur? Math.min(1,(t-t0)/dur) : 1;
+      const e=k<.5? 2*k*k : 1-Math.pow(-2*k+2,2)/2;
+      emL(l0+(l1-l0)*e);
+      if(k<1){ requestAnimationFrame(passo); }
+      else{
+        idx=destino; animando=false; porCasa(idx); pulsar(idx);
+        usados++;
+        if(usados%3===0) avancarJanela();
+        if(idx===casas.length-1) elCasa.textContent='Fim da rota — role os dados de novo';
+        if(dadosRestantes()===0) rolar();
+      }
+    })(t0);
+  }
+
+  // ——— dados ———
+  const elDados=document.getElementById('dados');
+  const PIPS={1:[[2,2]],2:[[1,1],[3,3]],3:[[1,1],[2,2],[3,3]],
+    4:[[1,1],[3,1],[1,3],[3,3]],5:[[1,1],[3,1],[2,2],[1,3],[3,3]],
+    6:[[1,1],[3,1],[1,2],[3,2],[1,3],[3,3]]};
+  let valores=[], gastos=[], usados=0;
+  function dadosRestantes(){ return gastos.filter(g=>!g).length; }
+
+  function rolar(){
+    valores=[0,0,0].map(()=>1+Math.floor(Math.random()*4));
+    gastos=[false,false,false];
+    desenharDados();
+  }
+  function desenharDados(){
+    elDados.innerHTML='';
+    valores.forEach((v,i)=>{
+      const b=document.createElement('button');
+      b.className='dado'; b.disabled=gastos[i];
+      b.setAttribute('aria-label',`Usar dado de valor ${v}`);
+      const s=document.createElementNS(SVG,'svg');
+      s.setAttribute('viewBox','0 0 5 5');
+      (PIPS[v]||[]).forEach(([x,y])=>{
+        const r=document.createElementNS(SVG,'rect');
+        r.setAttribute('x',x);r.setAttribute('y',y);
+        r.setAttribute('width','1');r.setAttribute('height','1');
+        r.setAttribute('fill','#2b2118');
+        s.appendChild(r);
+      });
+      b.appendChild(s);
+      b.addEventListener('click',()=>{
+        if(animando||gastos[i]) return;
+        gastos[i]=true; desenharDados(); navegar(v);
+      });
+      elDados.appendChild(b);
+    });
+  }
+  rolar();
+
+  // ——— janelas do dia ———
+  const JANELAS=[
+    {n:'Amanhecer', tint:'rgba(255,196,140,.26)', glow:'rgba(255,170,90,.16)'},
+    {n:'Meio-dia',  tint:'rgba(255,255,255,0)',   glow:'rgba(255,250,220,.07)'},
+    {n:'Tarde',     tint:'rgba(255,150,80,.22)',  glow:'rgba(255,120,40,.12)'},
+    {n:'Anoitecer', tint:'rgba(30,45,110,.52)',   glow:'rgba(90,120,210,.10)'}
+  ];
+  let jan=1;
+  const elJan=document.getElementById('janelas');
+  const tint=document.getElementById('tint'), glow=document.getElementById('glow');
+  JANELAS.forEach((j,i)=>{
+    const b=document.createElement('button');
+    b.textContent=j.n; b.setAttribute('aria-pressed', i===jan);
+    b.addEventListener('click',()=>{ jan=i; aplicarJanela(); });
+    elJan.appendChild(b);
+  });
+  function aplicarJanela(){
+    const j=JANELAS[jan];
+    tint.style.background=j.tint; glow.style.background=j.glow;
+    [...elJan.children].forEach((b,i)=>b.setAttribute('aria-pressed', i===jan));
+  }
+  function avancarJanela(){ jan=(jan+1)%JANELAS.length; aplicarJanela(); }
+  aplicarJanela();
+})();
+</script>
+
+<style>
+  @keyframes deriva{to{transform:translateX(-58px)}}
+  .o1{animation:deriva 5.5s linear infinite}
+  .o2{animation:deriva 4.2s linear infinite}
+  .o3{animation:deriva 3.4s linear infinite}
+
+  @keyframes passar{from{transform:translateX(-180px)}to{transform:translateX(1100px)}}
+  .n1{animation:passar 62s linear infinite}
+  .n2{animation:passar 84s linear infinite;animation-delay:-30s}
+  .n3{animation:passar 48s linear infinite;animation-delay:-18s}
+
+  @keyframes jogo{0%,100%{transform:rotate(-2.2deg) translateY(0)}50%{transform:rotate(2.2deg) translateY(-1px)}}
+  .balanco{animation:jogo 2.6s ease-in-out infinite;transform-origin:0 8px}
+
+  @keyframes tremula{0%{transform:scaleX(1)}25%{transform:scaleX(.72)}50%{transform:scaleX(1)}75%{transform:scaleX(.84)}100%{transform:scaleX(1)}}
+  .bandeira{animation:tremula .9s steps(4,end) infinite;transform-origin:1px 0}
+</style>
+</body>
+</html>

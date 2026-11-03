@@ -1,0 +1,23 @@
+# Saídas geradas
+build/
+*.pdf
+*.docx
+!docs/**/anexos/*.docx
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+dist/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Sobras da extração do tarball. docs/GDD.md é a versão vigente;
+# a cópia na raiz e a pasta pac-repo/ podem ser apagadas à vontade.
+/GDD.md
+/pac-repo/

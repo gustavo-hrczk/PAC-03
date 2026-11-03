@@ -1,0 +1,167 @@
+[
+ {
+  "molde": 1,
+  "nome": "Cobrança de serviço em atraso",
+  "natureza": "Pode ser legítima ou golpe",
+  "premissas": {
+   "Porto": "Autoridade portuária cobra multa por atraso no pagamento da taxa de ancoragem.",
+   "Alto-mar": "Navio desconhecido intercepta a rota cobrando \"pedágio de passagem\" por um estreito, alegando cobrança não paga.",
+   "Entreposto": "Fornecedor de mantimentos cobra por uma entrega feita semanas atrás, alegando fatura nunca quitada.",
+   "Praça": "Mensageiro entrega cobrança em nome de uma casa comercial, alegando atraso no pagamento de armazenagem."
+  }
+ },
+ {
+  "molde": 2,
+  "nome": "Reembolso ou estorno pendente",
+  "natureza": "Pode ser legítima ou golpe",
+  "premissas": {
+   "Porto": "Funcionário do porto promete devolver taxa cobrada por engano na última atracação.",
+   "Alto-mar": "Após relato de ataque pirata, um mensageiro da Coroa promete reembolso do carregamento perdido.",
+   "Entreposto": "Comerciante alega erro de cobrança na última compra e oferece estorno.",
+   "Praça": "Um despachante da Coroa se oferece para processar reembolso por carga extraviada."
+  }
+ },
+ {
+  "molde": 3,
+  "nome": "Atualização cadastral obrigatória",
+  "natureza": "Quase sempre golpe",
+  "premissas": {
+   "Porto": "Funcionário exige \"atualizar o registro do navio\" apresentando o selo pessoal antes de liberar a atracação.",
+   "Alto-mar": "Navio desconhecido intercepta exigindo conferir credenciais antes de liberar passagem.",
+   "Entreposto": "Escrivão pede para \"recadastrar\" a licença comercial, solicitando o selo pessoal.",
+   "Praça": "Suposto fiscal pede para conferir o selo do comerciante \"por segurança\"."
+  }
+ },
+ {
+  "molde": 4,
+  "nome": "Prêmio ou sorteio ganho",
+  "natureza": "Quase sempre golpe",
+  "premissas": {
+   "Porto": "Navio desconhecido ancora anunciando que o jogador foi sorteado num leilão da Coroa.",
+   "Alto-mar": "Navio misterioso cruza a rota alegando trazer carregamento de prêmio por \"boa navegação\".",
+   "Entreposto": "Comerciante anuncia que o nome do jogador saiu sorteado numa rifa de mercadorias.",
+   "Praça": "Desconhecido anuncia que o jogador foi selecionado em um sorteio da feira."
+  }
+ },
+ {
+  "molde": 5,
+  "nome": "Oferta de renda extra ou vaga",
+  "natureza": "Pode ser legítima ou golpe",
+  "premissas": {
+   "Porto": "Comandante recruta tripulantes extras no cais para \"uma viagem rápida e lucrativa\".",
+   "Alto-mar": "Capitão de outro navio oferece trabalho temporário de carregamento com pagamento alto.",
+   "Entreposto": "Comerciante oferece vaga de \"representante comercial\" com comissão muito alta.",
+   "Praça": "Recrutador anuncia vagas com salário muito acima do praticado na região."
+  }
+ },
+ {
+  "molde": 6,
+  "nome": "Empréstimo pré-aprovado",
+  "natureza": "Pode ser legítima ou golpe",
+  "premissas": {
+   "Porto": "Agente portuário oferece adiantar fundos para reparo do navio sem burocracia.",
+   "Alto-mar": "Comerciante de passagem oferece emprestar suprimentos \"sem juros, paga quando puder\".",
+   "Entreposto": "Casa comercial oferece crédito imediato para expandir o estoque.",
+   "Praça": "Desconhecido oferece emprestar fundos para a expedição sem cobrar juros."
+  }
+ },
+ {
+  "molde": 7,
+  "nome": "Contato de conhecido com número novo",
+  "natureza": "Quase sempre golpe",
+  "premissas": {
+   "Porto": "Mensagem chega em nome de um parceiro comercial conhecido, pedindo fundos urgentes por um novo mensageiro.",
+   "Alto-mar": "Bandeira de outro navio alega ser de um aliado, pedindo socorro financeiro urgente.",
+   "Entreposto": "Carta chega dizendo ser de um sócio, pedindo transferência para \"sanar dívida com um pirata\".",
+   "Praça": "Mensageiro desconhecido traz recado de \"um amigo em comum\" pedindo dinheiro emprestado com urgência."
+  }
+ },
+ {
+  "molde": 8,
+  "nome": "Alerta de compra suspeita",
+  "natureza": "Pode ser legítima ou golpe",
+  "premissas": {
+   "Porto": "Vendedor no cais oferece barris de pólvora a preço muito baixo, \"direto do armazém real\".",
+   "Alto-mar": "Navio cruza oferecendo vender carga suspeita \"antes de chegar ao porto oficial\".",
+   "Entreposto": "Comerciante oferece mercadoria de procedência duvidosa bem abaixo do preço de mercado.",
+   "Praça": "Vendedor ambulante oferece produtos raros \"que caíram de um carregamento\" por preço baixo."
+  }
+ },
+ {
+  "molde": 9,
+  "nome": "Encomenda parada com taxa pendente",
+  "natureza": "Quase sempre golpe",
+  "premissas": {
+   "Porto": "Funcionário do cais cobra \"taxa extra de liberação\" para entregar carga já paga.",
+   "Alto-mar": "Tripulante de outro navio pede taxa adicional para \"repassar\" uma encomenda interceptada.",
+   "Entreposto": "Entregador cobra taxa não combinada para finalizar a entrega.",
+   "Praça": "Mensageiro retém uma encomenda e pede pagamento extra para entregá-la."
+  }
+ },
+ {
+  "molde": 10,
+  "nome": "Promoção relâmpago",
+  "natureza": "Pode ser legítima ou golpe",
+  "premissas": {
+   "Porto": "Vendedor no cais anuncia liquidação \"só hoje, antes de o navio zarpar\".",
+   "Alto-mar": "Navio mercante cruza oferecendo preço especial só durante o encontro no mar.",
+   "Entreposto": "Comerciante anuncia promoção relâmpago num item valioso, \"só até o anoitecer\".",
+   "Praça": "Feirante grita promoção relâmpago numa barraca improvisada."
+  }
+ },
+ {
+  "molde": 11,
+  "nome": "Investimento com retorno garantido",
+  "natureza": "Sempre golpe",
+  "premissas": {
+   "Porto": "Comandante recém-chegado convence a investir na próxima expedição com \"retorno garantido\".",
+   "Alto-mar": "Capitão de passagem oferece sociedade na viagem, prometendo lucro certo sem risco.",
+   "Entreposto": "Comerciante oferece cota num carregamento com \"lucro garantido, sem risco\".",
+   "Praça": "Estranho oferece sociedade num negócio \"infalível\", pedindo investimento na hora."
+  }
+ },
+ {
+  "molde": 12,
+  "nome": "Multa ou tributo com desconto hoje",
+  "natureza": "Pode ser legítima ou golpe",
+  "premissas": {
+   "Porto": "Fiscal oferece desconto na taxa de ancoragem \"se pagar agora\".",
+   "Alto-mar": "Navio da Coroa intercepta cobrando tributo de passagem com desconto \"só hoje\".",
+   "Entreposto": "Escrivão oferece desconto na taxa comercial anual, mas só se pago imediatamente.",
+   "Praça": "Cobrador ambulante oferece \"perdão parcial\" de multa antiga se pago na hora."
+  }
+ },
+ {
+  "molde": 13,
+  "nome": "Assinatura recorrente inesperada",
+  "natureza": "Pode ser legítima ou golpe",
+  "premissas": {
+   "Porto": "Cobrança recorrente de taxa de manutenção do navio no estaleiro.",
+   "Alto-mar": "\"Pedágio de rota\" que se repete a cada travessia, sem aviso prévio.",
+   "Entreposto": "\"Taxa de armazenagem mensal\" que o comerciante não lembra de ter contratado.",
+   "Praça": "Cobrador pede pagamento de \"contribuição da Guilda\" que o jogador não recorda ter aceitado."
+  }
+ },
+ {
+  "molde": 14,
+  "nome": "Aluguel com sinal antecipado",
+  "natureza": "Pode ser legítima ou golpe",
+  "premissas": {
+   "Porto": "Dono de um navio no cais oferece aluguel, pedindo sinal antecipado antes de embarcar.",
+   "Alto-mar": "Capitão de outro navio oferece \"carona\" na rota, cobrando adiantado.",
+   "Entreposto": "Comerciante oferece alugar armazém, exigindo sinal antecipado.",
+   "Praça": "Desconhecido oferece alugar equipamento de navegação, pedindo pagamento antecipado."
+  }
+ },
+ {
+  "molde": 15,
+  "nome": "Conta de consumo com valor atípico",
+  "natureza": "Geralmente legítima",
+  "premissas": {
+   "Porto": "Conta de reparo do navio vem mais alta, por dano identificado na última viagem.",
+   "Alto-mar": "Consumo de suprimentos maior que o esperado após rota mais longa que o previsto.",
+   "Entreposto": "Conta de armazenagem vem mais alta, por volume extra de mercadoria guardada.",
+   "Praça": "Taxa de uso da praça vem mais alta num dia de feira grande."
+  }
+ }
+]
